@@ -1,6 +1,8 @@
 package piece;
 
 import main.ChessBoard;
+import main.GamePanel;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.IOException;
@@ -11,6 +13,7 @@ public class Piece {
     public int x, y;
     public int row, col, prevRow, prevCol;
     public int color;
+    public Piece hittingPiece;
 
     public Piece(int row, int col, int color) {
         this.row = row;
@@ -18,6 +21,8 @@ public class Piece {
         this.color = color;
         x = getX(col);
         y = getY(row);
+        prevCol = col;
+        prevRow = row;
     }
 
     public BufferedImage getImage(String imagePath) {
@@ -47,11 +52,49 @@ public class Piece {
     public int getRow(){
         return (y + ChessBoard.HALF_TILE_SIZE)/ChessBoard.TILE_SIZE;
     }
+    public int getIndex(){
+        for (int index = 0;index < GamePanel.pieces.size();index++){
+            if(GamePanel.pieces.get(index) == this){
+                return index;
+            }
+        }
+        return 0;
+    }
     public void updatePosition(){
         x = getX(col);
         y = getY(row);
         prevCol = getCol();
         prevRow = getRow();
+    }
+
+    public void resetPosition(){
+        col = prevCol;
+        row = prevRow;
+        x = getX(col);
+        y = getY(row);
+    }
+
+    public Piece getHittingPiece(int targetCol, int targetRow) {
+        for(Piece piece : GamePanel.pieces){
+            if(piece.col == targetCol && piece.row == targetRow && piece != this){
+                return piece;
+            }
+        }
+        return null;
+    }
+
+    public boolean isValidSquare(int targetCol, int targetRow) {
+        hittingPiece = getHittingPiece(targetCol, targetRow);
+        if (hittingPiece == null) {
+            return true;
+        } else{
+            if (hittingPiece.color != color) {
+                return true;
+            }else{
+               hittingPiece = null;
+            }
+        }
+        return false;
     }
 
     public boolean canMove(int targetCol, int targetRow) {

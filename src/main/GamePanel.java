@@ -20,6 +20,9 @@ public class GamePanel extends JPanel implements Runnable{
     public static final int Black = 1;
     int currentPlayer = White;
 
+    boolean canMove;
+    boolean validSquare;
+
     public GamePanel() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(Color.BLACK);
@@ -54,7 +57,7 @@ public class GamePanel extends JPanel implements Runnable{
         pieces.add(new Knight(7, 1, White));
         pieces.add(new Bishop(7, 2, White));
         pieces.add(new Queen(7, 3, White));
-        pieces.add(new King(7, 4, White));
+        pieces.add(new King(4,4, White));
         pieces.add(new Bishop(7, 5, White));
         pieces.add(new Knight(7, 6, White));
         pieces.add(new Rook(7, 7, White));
@@ -119,19 +122,39 @@ public class GamePanel extends JPanel implements Runnable{
 
         if (mouse.pressed == false) {
             if (activePiece != null) {
-                // if the mouse is released on a valid tile
-                activePiece.updatePosition();
-                activePiece = null;
+
+                if(validSquare){
+                    copyPieces(simpieces, pieces);
+                    activePiece.updatePosition();
+                } else {
+                    copyPieces(pieces, simpieces);
+                    activePiece.resetPosition();
+                    activePiece = null;
+                }
             }
         }
     }
     private void simulate() {
+
+        canMove = false;
+        validSquare = false;
+
+        copyPieces(pieces, simpieces);
+
         // if the mouse is released on a valid tile
         activePiece.x = mouse.x - ChessBoard.HALF_TILE_SIZE;
         activePiece.y = mouse.y - ChessBoard.HALF_TILE_SIZE;
         activePiece.row = activePiece.getRow();
         activePiece.col = activePiece.getCol();
 
+
+        if(activePiece.canMove(activePiece.col, activePiece.row)){
+            canMove = true;
+            if (activePiece.hittingPiece != null) {
+                simpieces.remove(activePiece.hittingPiece.getIndex());
+            }
+            validSquare = true;
+        }
 
     }
     public void paintComponent(Graphics g) {
@@ -143,11 +166,12 @@ public class GamePanel extends JPanel implements Runnable{
             simpiece.draw(g2);
         }
         if (activePiece != null) {
-            g2.setColor(Color.CYAN);
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
-            g2.fillRect(activePiece.col * ChessBoard.TILE_SIZE, activePiece.row * ChessBoard.TILE_SIZE, ChessBoard.TILE_SIZE, ChessBoard.TILE_SIZE);
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-
+//            if(canMove) {
+                g2.setColor(Color.CYAN);
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
+                g2.fillRect(activePiece.col * ChessBoard.TILE_SIZE, activePiece.row * ChessBoard.TILE_SIZE, ChessBoard.TILE_SIZE, ChessBoard.TILE_SIZE);
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+//            }
             activePiece.draw(g2);
         }
     }
