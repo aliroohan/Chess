@@ -101,6 +101,51 @@ public class Piece {
         return false;
     }
 
+    public boolean isSameSquare(int targetCol, int targetRow) {
+        if (prevCol == targetCol && prevRow == targetRow) {
+            return true;
+        }
+        return false;
+    }
+    public boolean pieceIsOnStraightLine(int targetCol, int targetRow) {
+        // when pice is moving to the left
+        for (int c = prevCol - 1; c > targetCol; c--){
+            for (Piece piece : GamePanel.simpieces){
+                if(piece.col == c && piece.row == targetRow){
+                    hittingPiece = piece;
+                    return true;
+                }
+            }
+        }
+        // when pice is moving to the right
+        for (int c = prevCol + 1; c < targetCol; c++){
+            for (Piece piece : GamePanel.simpieces){
+                if(piece.col == c && piece.row == targetRow){
+                    hittingPiece = piece;
+                    return true;
+                }
+            }
+        }
+        // when pice is moving up
+        for (int r = prevRow - 1; r > targetRow; r--){
+            for (Piece piece : GamePanel.simpieces){
+                if(piece.col == targetCol && piece.row == r){
+                    hittingPiece = piece;
+                    return true;
+                }
+            }
+        }
+        for (int r = prevRow + 1; r < targetRow; r++){
+            for (Piece piece : GamePanel.simpieces){
+                if(piece.col == targetCol && piece.row == r){
+                    hittingPiece = piece;
+                    return true;
+                }
+            }
+        }
+        // when pice is moving down
+        return false;
+    }
     public boolean isWithinBounds(int targetCol, int targetRow) {
         if (targetCol >= 0 && targetCol <= 7 && targetRow >= 0 && targetRow <= 7) {
             return true;
