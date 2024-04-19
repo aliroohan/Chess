@@ -166,12 +166,12 @@ public class GamePanel extends JPanel implements Runnable{
             simpiece.draw(g2);
         }
         if (activePiece != null) {
-//            if(canMove) {
+            if(canMove) {
                 g2.setColor(Color.CYAN);
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
                 g2.fillRect(activePiece.col * ChessBoard.TILE_SIZE, activePiece.row * ChessBoard.TILE_SIZE, ChessBoard.TILE_SIZE, ChessBoard.TILE_SIZE);
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-//            }
+            }
             activePiece.draw(g2);
         }
     }
