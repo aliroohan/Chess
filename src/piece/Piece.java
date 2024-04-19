@@ -146,6 +146,57 @@ public class Piece {
         // when pice is moving down
         return false;
     }
+
+    public boolean pieceIsOnDiagonalLine(int targetCol, int targetRow) {
+
+        if (targetRow < prevRow) {
+            // when pice is moving to the left and up
+            for (int c = prevCol - 1; c > targetCol; c--) {
+                int diff = Math.abs(prevCol - c);
+                for (Piece piece : GamePanel.simpieces) {
+                    if (piece.col == c && piece.row == prevRow - diff) {
+                        hittingPiece = piece;
+                        return true;
+                    }
+                }
+            }
+            // when pice is moving to the right and up
+            for (int c = prevCol + 1; c < targetCol; c++) {
+                int diff = Math.abs(prevCol - c);
+                for (Piece piece : GamePanel.simpieces) {
+                    if (piece.col == c && piece.row == prevRow - diff) {
+                        hittingPiece = piece;
+                        return true;
+                    }
+                }
+            }
+        }
+        if (targetRow > prevRow) {
+            // when pice is moving to the left and down
+            for (int c = prevCol - 1; c > targetCol; c--) {
+                int diff = Math.abs(prevCol - c);
+                for (Piece piece : GamePanel.simpieces) {
+                    if (piece.col == c && piece.row == prevRow + diff) {
+                        hittingPiece = piece;
+                        return true;
+                    }
+                }
+            }
+
+            // when pice is moving to the right and down
+            for (int c = prevCol + 1; c < targetCol; c++) {
+                int diff = Math.abs(prevCol - c);
+                for (Piece piece : GamePanel.simpieces) {
+                    if (piece.col == c && piece.row == prevRow + diff) {
+                        hittingPiece = piece;
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean isWithinBounds(int targetCol, int targetRow) {
         if (targetCol >= 0 && targetCol <= 7 && targetRow >= 0 && targetRow <= 7) {
             return true;
